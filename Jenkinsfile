@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        maven "Maven-3.9"   // Must match Jenkins Global Tool Configuration
+        jdk "JDK-17"
+    }
+
     stages {
         stage('Clone Repository') {
             steps {
