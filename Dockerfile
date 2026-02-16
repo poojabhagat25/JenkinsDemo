@@ -2,7 +2,7 @@ FROM tomcat:9-jdk17
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-COPY target/login-app.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/jenkinsdemo.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
 
