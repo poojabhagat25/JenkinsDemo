@@ -1,29 +1,31 @@
-# FROM tomcat:9-jdk17
-
-# RUN rm -rf /usr/local/tomcat/webapps/*
-
-# COPY target/JenkinsDemo-0.0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/ROOT.jar
-
-# EXPOSE 8080
-
-# CMD ["catalina.sh", "run"]
-
-
-# 1️⃣ Use an official Java 17 JDK image for building
-FROM eclipse-temurin:17-jdk AS build
-
-
-# FROM eclipse-temurin:17-jre
+# ---------- Stage 1: Build ----------
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 # Set working directory
+WORKDIR /app
+
+# Copy pom.xml first (for better caching)
+COPY pom.xml .
+
+# Download dependencies (cached unless pom.xml changes)
+RUN mvn dependency:go-offline
+
+# Copy source code
+COPY src ./src
+
+# Build the application
+RUN mvn clean package -DskipTests
+
+# ---------- Stage 2: Run ----------
+FROM eclipse-temurin:17-jdk-alpine
+
 WORKDIR /app
 
 # Copy the built jar from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose application port
+# Expose port (optional — change if your app uses a different port)
 EXPOSE 8080
 
-# Run the Spring Boot application
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
