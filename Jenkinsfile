@@ -47,7 +47,7 @@ pipeline {
 
         stage('Docker Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'pooja_docker_creds_id',
+                withCredentials([usernamePassword(credentialsId: 'pooja_creds',
                                                  usernameVariable: 'DOCKER_USER',
                                                  passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
